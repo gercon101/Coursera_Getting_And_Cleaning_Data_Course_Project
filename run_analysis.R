@@ -2,9 +2,9 @@
 # Check if the reshape2 package is available
 # if not then install it.
 
-rm(list=ls())  
-
 if (!require("reshape2")) {
+        print("reshape2 package not installed...")
+        print("installing now...")
         install.packages("reshape2")
 }
 
@@ -83,7 +83,7 @@ print("Done")
 
 print("Write merged data file")
 # Write the clean and merged data to file
-write.table(merged_clean_data, "./merged_clean_data.csv", sep=",", row.names=FALSE)
+write.table(merged_clean_data, "./merged_clean_data.txt", row.names=FALSE)
 print("Done")
 
 print("Create Summary Data Set")
@@ -94,6 +94,6 @@ print("Done")
 
 print("Write the summary data file")
 # The summary dataset is written to file
-write.table(mean_features_by_subject_activity, "./mean_features_by_subject_activity.csv", sep=",", row.names=FALSE)
+write.table(mean_features_by_subject_activity, "./mean_features_by_subject_activity.txt", row.names=FALSE)
 print("Done")
 print("Script Complete")
