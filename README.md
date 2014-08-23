@@ -55,12 +55,12 @@
 
 * The merged and cleaned data is written to a file 
 
-        \UCI HAR Dataset\merged_clean_data.csv
+        \UCI HAR Dataset\merged_clean_data.txt
 
 * Finally a summarized dataset is produced which provides the average of each feature for each activity and subject
   This summarized dataset is written to a file 
   
-        \UCI HAR Dataset\mean_features_by_subject_activity.csv
+        \UCI HAR Dataset\mean_features_by_subject_activity.txt
   
   
   .

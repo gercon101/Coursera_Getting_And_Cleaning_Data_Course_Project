@@ -48,7 +48,7 @@ The run_analysis.R script performs the following transformations on the original
         4. The column names are tidied up
         3. THe quantitative measures, activity labels and subjet ids are merged for both the training and test datasets (cbind).
         4. The training and test datasets are combined into a single dataset (rbind).
-        5. The cleaned and merged dataset is written to the file \UCI HAR Dataset\merged_clean_data.csv
+        5. The cleaned and merged dataset is written to the file \UCI HAR Dataset\merged_clean_data.txt
         6. A second independent data set with the average of each feature for each activity and subject is produced
-        7. This second summary data set is written to the file \UCI HAR Dataset\mean_features_by_subject_activity.csv
+        7. This second summary data set is written to the file \UCI HAR Dataset\mean_features_by_subject_activity.txt
 		
