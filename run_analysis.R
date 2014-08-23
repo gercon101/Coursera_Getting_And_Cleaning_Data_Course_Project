@@ -79,6 +79,7 @@ clean_train<-cbind(subject_train, y_train,x_train)
 # Combine the training and test datasets
 merged_clean_data<-rbind(clean_test,clean_train)
 
+
 print("Done")
 
 print("Write merged data file")
@@ -90,6 +91,8 @@ print("Create Summary Data Set")
 # Create a second summary dataset  with the average of each feature for each activity and subject
 merged_clean_data_melt <- melt(merged_clean_data,id=c("Activity", "SubjectID"),measure.vars=names(merged_clean_data)[c(-1,-2)])
 mean_features_by_subject_activity <- dcast(merged_clean_data_melt,  Activity +SubjectID ~ variable,mean)
+# rename the output columns to reflect the fact they are averages by subject and activity 
+names(mean_features_by_subject_activity)[c(-1,-2)]<-paste("average(",names(mean_features_by_subject_activity)[c(-1,-2)],")", sep='' )
 print("Done")
 
 print("Write the summary data file")
@@ -97,3 +100,5 @@ print("Write the summary data file")
 write.table(mean_features_by_subject_activity, "./mean_features_by_subject_activity.txt", row.names=FALSE)
 print("Done")
 print("Script Complete")
+
+
