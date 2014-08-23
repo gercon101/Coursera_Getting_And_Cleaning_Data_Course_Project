@@ -1,28 +1,23 @@
 
-# Merges the training and the test sets to create one data set.
-# Extracts only the measurements on the mean and standard deviation for each measurement. 
-# Uses descriptive activity names to name the activities in the data set
-# Appropriately labels the data set with descriptive variable names. 
-# Creates a second, independent tidy data set with the average of each variable for each activity and each subject. 
-
-
+# Check if the reshape2 package is available
+# if not then install it.
 
 rm(list=ls())  
 
-library("reshape2")
+if (!require("reshape2")) {
+        install.packages("reshape2")
+}
 
-
-# set the working directory
-setwd("C:\\Users\\ConwayGn\\Documents\\Coursera\\Getting and Cleaning Data\\project\\UCI HAR Dataset")
+require("reshape2")
 
 
 # read and store feature labels and activity labels
 features = read.table('./features.txt',header=FALSE); 
 activity_labels = read.table('./activity_labels.txt',header=FALSE); 
 
-# assign meaningful column names to feature and activity_label data frames
+# assign meaningful column names to feature and activity_label data.frames
 names(features)<-c("Feature ID", "Feature")
-names(activity_labels)<-c("Activity ID", "Activity")
+names(activity_labels)<-c("ActivityID", "Activity")
 
 # assess the content of features and activity label data frames
 # str(features)
@@ -35,10 +30,11 @@ y_test = read.table('./test/y_test.txt')
 
 # Apply actual feature names to x_test columns
 names(x_test)<-features$Feature
+# Name the subject id column in subject_test
 names(subject_test)<-c("SubjectID")
+# Name the activity id column in activity data y_test
 names(y_test)<-c("Activity")
-
-# Swap the activity IDs for descriptive Activity Labels
+# Replace the Activity IDs with the descriptive Activity Labels
 y_test[,1] = activity_labels[y_test[,1], 2]
 
 # read and store training data (x_train), training subjects (subject_train) and training activity type data (y_train)
@@ -48,27 +44,37 @@ y_train = read.table('./train/y_train.txt')
 
 # Apply actual feature names to x_train columns
 names(x_train)<-features$Feature
+# Name the subject id column in subject_train
 names(subject_train)<-c("SubjectID")
+# Name the activity id column in activity data y_train
 names(y_train)<-c("Activity")
+# Replace the Activity IDs with the descriptive Activity Labels
 y_train[,1] = activity_labels[y_train[,1], 2]
 
-# Select on the mean and standard deviation features
+# Retain only the mean and standard deviation feature columns
 x_test<-x_test[,grep('mean|std',names(x_test))]
 x_train<-x_train[,grep('mean|std',names(x_train))]
 
+# Remove brackets and dashes from column names in training and test data
 names(x_test) <- gsub("\\(|\\)", "", names(x_test))
 names(x_test) <- gsub("-", " ", names(x_test))
 names(x_train) <- gsub("\\(|\\)", "", names(x_train))
 names(x_train) <- gsub("-", " ", names(x_train))
 
-
+# merge the feature, subject and activity columns into single 
+# data.frames for training and test
 clean_test<-cbind(subject_test, y_test,x_test)
 clean_train<-cbind(subject_train, y_train,x_train)
 
+# Combine the training and test datasets
 merged_clean_data<-rbind(clean_test,clean_train)
 
+# Write the clean and merged data to file
+write.table(merged_clean_data, "./merged_clean_data.csv", sep=",", row.names=FALSE)
 
+# Create a second summary dataset  with the average of each feature for each activity and subject
+merged_clean_data_melt <- melt(merged_clean_data,id=c("Activity", "SubjectID"),measure.vars=names(merged_clean_data)[c(-1,-2)])
+mean_features_by_subject_activity <- dcast(merged_clean_data_melt,  Activity +SubjectID ~ variable,mean)
 
-merged_clean_data_melt <- melt(merged_clean_data,id=c("SubjectID","Activity"),measure.vars=names(merged_clean_data)[c(-1,-2)])
-mean_features_by_subject_activity <- dcast(merged_clean_data_melt,  SubjectID + Activity ~ variable,mean)
+# The summary dataset is written to file
 write.table(mean_features_by_subject_activity, "./mean_features_by_subject_activity.csv", sep=",", row.names=FALSE)
